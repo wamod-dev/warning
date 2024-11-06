@@ -7,8 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-
-  main:
+  go:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
