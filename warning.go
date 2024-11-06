@@ -41,6 +41,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"strings"
 )
 
 // Warning is an interface representing a warning.
@@ -134,4 +135,22 @@ func Detach(ctx context.Context) context.Context {
 	}
 
 	return setWriter(ctx, nil)
+}
+
+type multiWarning struct {
+	warnings []Warning
+}
+
+func (wrr *multiWarning) Warn() string {
+	dst := make([]string, len(wrr.warnings))
+	for _, w := range wrr.warnings {
+		dst = append(dst, w.Warn())
+	}
+
+	return strings.Join(dst, ", ")
+}
+
+// Join creates a new warning that combines multiple warnings into one.
+func Join(wrrs ...Warning) Warning {
+	return &multiWarning{wrrs}
 }
